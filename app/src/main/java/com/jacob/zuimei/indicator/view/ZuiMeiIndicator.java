@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -51,6 +53,11 @@ public class ZuiMeiIndicator extends LinearLayout implements ViewPager.OnPageCha
      * 对外的接口
      */
     private OnPageChangeListener mPageChangeListener;
+
+    /**
+     * 整个layout偏移的距离
+     */
+    private int mTranslationX =0;
 
 
     public ZuiMeiIndicator(Context context) {
@@ -119,7 +126,7 @@ public class ZuiMeiIndicator extends LinearLayout implements ViewPager.OnPageCha
 //        Log.e("TAG",position+"++"+offset);
         onScroll(position, offset);
         if (mPageChangeListener != null){
-            mPageChangeListener.onPageScrolled(position,offset,i2);
+            mPageChangeListener.onPageScrolled(position, offset, i2);
         }
     }
 
@@ -131,8 +138,8 @@ public class ZuiMeiIndicator extends LinearLayout implements ViewPager.OnPageCha
         int count = getChildCount();
         if (count>mTabVisibleCount){
             if ((position >= mTabVisibleCount-4)&& (position<count-4)){
-                int translation = (int) (mTabItemWidth * ((position+1)-(mTabVisibleCount-3)+offset));
-                this.scrollTo(translation,0);
+                mTranslationX = (int) (mTabItemWidth * ((position+1)-(mTabVisibleCount-3)+offset));
+                this.scrollTo(mTranslationX,0);
             }
         }
     }
@@ -173,13 +180,68 @@ public class ZuiMeiIndicator extends LinearLayout implements ViewPager.OnPageCha
             indicatorItemView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                        if (mViewPager != null){
+                        if (mViewPager != null&& mCurrentPosition!=index){
                             mViewPager.setCurrentItem(index,true);
                         }
                 }
             });
             addView(indicatorItemView);
         }
+    }
+
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        switch (ev.getAction()){
+//            case MotionEvent.ACTION_DOWN:
+//                Log.e("TAG","actionDown");
+////                showThePointIndicator(ev);
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                Log.e("TAG","ACTION_MOVE"+ev.getX());
+//                showThePointIndicator(ev);
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                Log.e("TAG","ACTION_UP");
+//                showThePointIndicator(ev);
+//                mViewPager.setCurrentItem(mCurrentPosition);
+//                break;
+//        }
+//
+//        return super.dispatchTouchEvent(ev);
+//    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                Log.e("TAG","actionDown");
+//                showThePointIndicator(ev);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                Log.e("TAG","ACTION_MOVE"+ev.getX());
+                showThePointIndicator(ev);
+                break;
+            case MotionEvent.ACTION_UP:
+                Log.e("TAG","ACTION_UP");
+                showThePointIndicator(ev);
+                mViewPager.setCurrentItem(mCurrentPosition);
+                break;
+        }
+
+        return super.onTouchEvent(ev);
+    }
+
+    private void showThePointIndicator(MotionEvent ev) {
+        int position = getPositionByMovePoint(ev.getX());
+        hideIndicatorAtPosition(mCurrentPosition);
+        showIndicatorAtPosition(position);
+        mCurrentPosition = position;
+    }
+
+    private int getPositionByMovePoint(float touchX){
+        float distance = touchX+mTranslationX;
+        return (int) (distance/mTabItemWidth);
     }
 
     /**
