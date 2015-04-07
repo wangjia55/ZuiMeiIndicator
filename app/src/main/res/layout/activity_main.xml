@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#ff80e1ad">
 
     <RelativeLayout
         android:id="@+id/relative_header"
@@ -11,7 +12,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textSize="19sp"
+            android:textSize="22sp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
             android:layout_marginLeft="20dp"
             android:text="最美应用"/>
 
@@ -28,6 +31,7 @@
         android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_height="75dp"/>
+        android:layout_marginBottom="-20dp"
+        android:layout_height="70dp"/>
 
 </RelativeLayout>

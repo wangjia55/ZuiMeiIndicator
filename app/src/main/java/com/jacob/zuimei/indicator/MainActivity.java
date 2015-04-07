@@ -30,8 +30,8 @@ public class MainActivity extends FragmentActivity {
         mViewPager.setAdapter(mPagerAdapter);
 
         mIndicator = (ZuiMeiIndicator) findViewById(R.id.indicator);
-        mIndicator.setViewPager(mViewPager,0);
         mIndicator.setIndicatorItems(mAppList);
+        mIndicator.setViewPager(mViewPager,0);
     }
 
     private void initAppData(){
