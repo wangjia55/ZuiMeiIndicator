@@ -62,4 +62,5 @@ public class IndicatorItemView extends RelativeLayout {
     private int dpToPx(int dp){
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,getResources().getDisplayMetrics());
     }
+
 }
