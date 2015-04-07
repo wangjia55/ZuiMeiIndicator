@@ -19,19 +19,38 @@ public class ZuiMeiIndicator extends LinearLayout implements ViewPager.OnPageCha
 
     private Context mContext;
 
+    /**
+     *传入的ViewPager
+     */
     private ViewPager mViewPager;
-
+    /**
+     *默认每个Indicator的宽度是屏幕的1/7
+     */
     public static final float RADIO_WIDTH = 1/7f;
-
+    /**
+     * 默认可见的Indicator的个数是7个
+     */
     public static final int  TAB_VISIBLE_COUNT = 7;
-
+    /**
+     * 每个item的宽度
+     */
     private int mTabItemWidth;
-
+    /**
+     * 当前选中的页面的position
+     */
     private int mCurrentPosition;
-
+    /**
+     *传入的数据
+     */
     private List<AppBean> mAppBeanList;
-
+    /**
+     * 可见的item的个数，默认7个
+     */
     private int mTabVisibleCount = TAB_VISIBLE_COUNT;
+    /**
+     * 对外的接口
+     */
+    private OnPageChangeListener mPageChangeListener;
 
 
     public ZuiMeiIndicator(Context context) {
@@ -52,6 +71,9 @@ public class ZuiMeiIndicator extends LinearLayout implements ViewPager.OnPageCha
         mTabItemWidth = (int) (getScreenWidth()*RADIO_WIDTH);
     }
 
+    /**
+     *传入的ViewPager，并且添加OnPageChangeListener
+     */
     public void setViewPager(ViewPager viewPager ,int position){
         this.mViewPager = viewPager;
         mCurrentPosition = position;
@@ -62,6 +84,9 @@ public class ZuiMeiIndicator extends LinearLayout implements ViewPager.OnPageCha
         showIndicatorAtPosition(position);
     }
 
+    /**
+     * 显示指定位置上的Indicator，含有动画效果
+     */
     private void showIndicatorAtPosition(int position){
         View childOld = getChildAt(position);
         if (childOld instanceof  IndicatorItemView){
@@ -69,6 +94,9 @@ public class ZuiMeiIndicator extends LinearLayout implements ViewPager.OnPageCha
         }
     }
 
+    /**
+     * 隐藏指定位置上的Indicator，含有动画效果
+     */
     private void hideIndicatorAtPosition(int position){
         View childOld = getChildAt(position);
         if (childOld instanceof  IndicatorItemView){
@@ -81,14 +109,24 @@ public class ZuiMeiIndicator extends LinearLayout implements ViewPager.OnPageCha
         showIndicatorAtPosition(position);
         hideIndicatorAtPosition(mCurrentPosition);
         mCurrentPosition  = position;
+        if (mPageChangeListener != null){
+            mPageChangeListener.onPageSelected(position);
+        }
     }
 
     @Override
     public void onPageScrolled(int position, float offset, int i2) {
 //        Log.e("TAG",position+"++"+offset);
         onScroll(position, offset);
+        if (mPageChangeListener != null){
+            mPageChangeListener.onPageScrolled(position,offset,i2);
+        }
     }
 
+    /**
+     *  重点：这里为了保证viewpager在滑动的过程中，indicator一致显示在第4个位置（中间的位置）
+     *  所以在滑动过程中，需要调整Layout的位置
+     */
     private void onScroll(int position, float offset) {
         int count = getChildCount();
         if (count>mTabVisibleCount){
@@ -101,7 +139,9 @@ public class ZuiMeiIndicator extends LinearLayout implements ViewPager.OnPageCha
 
     @Override
     public void onPageScrollStateChanged(int i) {
-
+        if (mPageChangeListener != null){
+            mPageChangeListener.onPageScrollStateChanged(i);
+        }
     }
 
 
@@ -140,5 +180,20 @@ public class ZuiMeiIndicator extends LinearLayout implements ViewPager.OnPageCha
             });
             addView(indicatorItemView);
         }
+    }
+
+    /**
+     * 对外的接口，由于viewpager的监听事件是在内部处理的，
+     * 所以再写一个一样的接口对外使用
+     */
+    public interface OnPageChangeListener{
+        public void onPageSelected(int position);
+        public void onPageScrolled(int position, float offset, int i2);
+        public void onPageScrollStateChanged(int i);
+
+    }
+
+    public void setOnPageChangeListener(OnPageChangeListener listener){
+        this.mPageChangeListener = listener;
     }
 }

@@ -31,7 +31,23 @@ public class MainActivity extends FragmentActivity {
 
         mIndicator = (ZuiMeiIndicator) findViewById(R.id.indicator);
         mIndicator.setIndicatorItems(mAppList);
-        mIndicator.setViewPager(mViewPager,0);
+        mIndicator.setViewPager(mViewPager, 0);
+        mIndicator.setOnPageChangeListener(new ZuiMeiIndicator.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                //TODO:
+            }
+
+            @Override
+            public void onPageScrolled(int position, float offset, int i2) {
+                //TODO:
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+                //TODO:
+            }
+        });
     }
 
     private void initAppData(){
