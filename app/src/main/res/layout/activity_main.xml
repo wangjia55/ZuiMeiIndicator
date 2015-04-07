@@ -2,5 +2,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/relative_header"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="19sp"
+            android:layout_marginLeft="20dp"
+            android:text="最美应用"/>
+
+        </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_below="@+id/relative_header"
+        android:layout_above="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.jacob.zuimei.indicator.view.ZuiMeiIndicator
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="75dp"/>
 
 </RelativeLayout>
